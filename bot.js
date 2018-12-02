@@ -7,8 +7,14 @@ const YouTube = require('youtube-node');
 const yt = require('ytdl-core');
 var youTube = new YouTube();
 youTube.setKey('AIzaSyDtLJezFAIk6FR36SxG-QbN2vdjs9MXujc');
+
+nexus.on('ready', () => {
+	console.log('Ready!');
+});
+const prefix = "1";
+
 // 'subscribe': (msg) => {
-    // if (message.guild.id === '270015194061602817') {
+    // if (message.guild.id === '479090634813341696') {
     //     let member = message.guild.member
     //     var role = message.guild.roles.find('name', "Subscriber");
     //     message.member.addRole(role)
@@ -20,7 +26,7 @@ const commands = {
 	'play': (msg) => {
 		if (!msg.guild || !msg.member) return;
 		const voiceChannel = msg.member.voiceChannel;
-		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${tokens.prefix}add`);
+		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${prefix}add`);
 		if (!msg.guild.voiceConnection) return commands.join(msg).then(() => commands.play(msg));
 		if (queue[msg.guild.id].playing) return msg.channel.sendMessage('Already Playing Music.');
 		let dispatcher;
@@ -37,17 +43,17 @@ const commands = {
 			dispatcher = msg.guild.voiceConnection.playStream(yt(song.url, { audioonly: true }), { passes : tokens.passes });
 			let collector = msg.channel.createCollector(m => m);
 			collector.on('message', m => {
-				if (m.content.startsWith(tokens.prefix + 'pause')) {
+				if (m.content.startsWith(prefix + 'pause')) {
 					if (!voiceChannel || voiceChannel.type !== 'voice') return msg.channel.sendMessage(':fire: Please join a voiceChannel.');	
 					msg.channel.sendMessage('Paused music').then(() => {dispatcher.pause();});
-				} else if (m.content.startsWith(tokens.prefix + 'resume')){
+				} else if (m.content.startsWith(prefix + 'resume')){
 						if (!voiceChannel || voiceChannel.type !== 'voice') return msg.channel.sendMessage(':fire: Please join a voiceChannel.');
 					msg.channel.sendMessage('Resumed music').then(() => {dispatcher.resume();});
-				} else if (m.content.startsWith(tokens.prefix + 'skip')){
+				} else if (m.content.startsWith(prefix + 'skip')){
 						if (!voiceChannel || voiceChannel.type !== 'voice') return msg.channel.sendMessage(':fire: Please join a voiceChannel.');
 					// msg.channel.sendMessage('This command is currently disabled at the time being.')
 					msg.channel.sendMessage('Song skipped.').then(() => {dispatcher.end();});
-				// } else if (m.content.startsWith(tokens.prefix + 'time')){
+				// } else if (m.content.startsWith(prefix + 'time')){
 				// 	msg.channel.sendMessage(`time: ${Math.floor(dispatcher.time / 60000)}:${Math.floor((dispatcher.time % 60000)/1000) <10 ? '0'+Math.floor((dispatcher.time % 60000)/1000) : Math.floor((dispatcher.time % 60000)/1000)}`);
 				}
 			});
@@ -75,7 +81,7 @@ const commands = {
 	},
 	// 'add': (msg) => {
 	// 	let url = msg.content.split(' ')[1];
-	// 	if (url == '' || url === undefined) return msg.channel.sendMessage(`You must add a url, or youtube video id after ${tokens.prefix}add`);
+	// 	if (url == '' || url === undefined) return msg.channel.sendMessage(`You must add a url, or youtube video id after ${prefix}add`);
 	// 	yt.getInfo(url, (err, info) => {
 	// 		if(err) return msg.channel.sendMessage('Invalid YouTube Link: ' + err);
 	// 		if (!queue.hasOwnProperty(msg.guild.id)) queue[msg.guild.id] = {}, queue[msg.guild.id].playing = false, queue[msg.guild.id].songs = [];
@@ -88,7 +94,7 @@ const commands = {
 		if (!msg.guild || !msg.member) return;
 	return new Promise((resolve, reject) => {
 	 let name = msg.content.split(" ").splice(1).join(" ");
-	             	if (name == '' || name === undefined) return msg.channel.sendMessage(`:fire: An error has occured. Please do ${tokens.prefix}add \`<url|song name>\``)
+	             	if (name == '' || name === undefined) return msg.channel.sendMessage(`:fire: An error has occured. Please do ${prefix}add \`<url|song name>\``)
             youTube.search(name, 1, function(error, result) {
                 if (error) {
                     if (err) return msg.channel.sendMessage('Error: ' + err);
@@ -110,7 +116,7 @@ const commands = {
 	},
 	'queue': (msg) => {
 		if (!msg.guild || !msg.member) return;
-		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${tokens.prefix}add`);
+		if (queue[msg.guild.id] === undefined) return msg.channel.sendMessage(`Add some songs to the queue first with ${prefix}add`);
 		let tosend = [];
 		queue[msg.guild.id].songs.forEach((song, i) => { tosend.push(`${i+1}. ${song.title} - Requested by: ${song.requester}`);});
 		msg.channel.sendMessage(`Current songs queued ${(tosend.length > 5 ? '*[Only next 5 shown]*' : '')}\n\`\`\`${tosend.slice(0,15).join('\n')}\`\`\``);
@@ -141,7 +147,7 @@ voiceChannel.leave()
 	},
 	'subscribe': (msg) => {
 		if (!msg.guild || !msg.member) return;
-	     if (msg.guild.id === '270015194061602817') {
+	     if (msg.guild.id === '479090634813341696') {
         let member = msg.guild.member
         var role = msg.guild.roles.find('name', "Subscriber");
         msg.member.addRole(role)
@@ -153,7 +159,7 @@ voiceChannel.leave()
 	'eval': (msg) => {
 	 var evalcode = msg.content.split(" ").splice(1).join(" ");
         try {
-           if (msg.author.id != "255815122616844288")
+           if (msg.author.id != "479090634813341696")
            return msg.reply("Atleast you tried.")
             var evaled = eval(evalcode);
             if (typeof evaled !== "string")
@@ -191,12 +197,9 @@ voiceChannel.leave()
             }
 	}
 };
-nexus.on('ready', () => {
-	console.log('Ready!');
-});
 
 nexus.on('message', msg => {
-	if (!msg.content.startsWith(tokens.prefix)) return;
-	if (commands.hasOwnProperty(msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0])) commands[msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0]](msg);
+	if (!msg.content.startsWith(prefix)) return;
+	if (commands.hasOwnProperty(msg.content.toLowerCase().slice(prefix.length).split(' ')[0])) commands[msg.content.toLowerCase().slice(prefix.length).split(' ')[0]](msg);
 });
 client.login(process.env.BOT_TOKEN);
