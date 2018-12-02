@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const nexus = new Discord.Client();
+const client = new Discord.Client();
 const client = new Discord.Client();
 let config = require('./config.json')
 let tokens = require('./tokens.json')
@@ -8,11 +8,11 @@ const yt = require('ytdl-core');
 var youTube = new YouTube();
 youTube.setKey('AIzaSyDtLJezFAIk6FR36SxG-QbN2vdjs9MXujc');
 
-nexus.on('ready', () => {
-	console.log('Ready!');
-});
-const prefix = "1";
 
+const prefix = "1";
+client.on("ready", async () => {
+	console.log(`Bot is ready! ${client.user.username}`);
+	client.user.setActivity(`Type ${prefix}play`, {type: 'PLAYING'})
 // 'subscribe': (msg) => {
     // if (message.guild.id === '479090634813341696') {
     //     let member = message.guild.member
@@ -142,7 +142,7 @@ voiceChannel.leave()
 	},
 	'volume': (msg) => {
 	return new Promise((resolve, reject) => {
-	msg.channel.sendMessage("To turn the volume up or down, use the nexus to do that, by right clicking on Nexus. http://prntscr.com/dyl114")
+	msg.channel.sendMessage("To turn the volume up or down, use the client to do that, by right clicking on client. http://prntscr.com/dyl114")
 	});
 	},
 	'subscribe': (msg) => {
@@ -198,8 +198,4 @@ voiceChannel.leave()
 	}
 };
 
-nexus.on('message', msg => {
-	if (!msg.content.startsWith(prefix)) return;
-	if (commands.hasOwnProperty(msg.content.toLowerCase().slice(prefix.length).split(' ')[0])) commands[msg.content.toLowerCase().slice(prefix.length).split(' ')[0]](msg);
-});
 client.login(process.env.BOT_TOKEN);
