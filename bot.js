@@ -197,9 +197,6 @@ voiceChannel.leave()
             }
 	}
 };
-nexus.on('message', msg => {
-	if (!msg.content.startsWith(tokens.prefix)) return;
-	if (commands.hasOwnProperty(msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0])) commands[msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0]](msg);
-});
+
 
 client.login(process.env.BOT_TOKEN);
