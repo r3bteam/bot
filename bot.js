@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const nexus = new Discord.Client();
+const client = new Discord.Client();
 let config = require('./config.json')
 let tokens = require('./tokens.json')
 const YouTube = require('youtube-node');
@@ -198,4 +199,4 @@ nexus.on('message', msg => {
 	if (!msg.content.startsWith(tokens.prefix)) return;
 	if (commands.hasOwnProperty(msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0])) commands[msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0]](msg);
 });
-nexus.login(config.token);
+client.login(process.env.BOT_TOKEN);
