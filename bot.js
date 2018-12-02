@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const client = new Discord.Client();
 let config = require('./config.json')
 let tokens = require('./tokens.json')
 const YouTube = require('youtube-node');
@@ -13,6 +12,7 @@ const prefix = "1";
 client.on("ready", async () => {
 	console.log(`Bot is ready! ${client.user.username}`);
 	client.user.setActivity(`Type ${prefix}play`, {type: 'PLAYING'})
+});
 // 'subscribe': (msg) => {
     // if (message.guild.id === '479090634813341696') {
     //     let member = message.guild.member
@@ -197,5 +197,9 @@ voiceChannel.leave()
             }
 	}
 };
+nexus.on('message', msg => {
+	if (!msg.content.startsWith(tokens.prefix)) return;
+	if (commands.hasOwnProperty(msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0])) commands[msg.content.toLowerCase().slice(tokens.prefix.length).split(' ')[0]](msg);
+});
 
 client.login(process.env.BOT_TOKEN);
